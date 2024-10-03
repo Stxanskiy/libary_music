@@ -28,6 +28,22 @@ services:
       - ./migrations:/migrations
       - ./wait_for.sh:/wait_for.sh
 
+  app:
+    build:
+      context: .
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5436
+      DB_USER: antonio
+      DB_PASS: qwerty
+      DB_NAME: postgres
+      DB_SSLMODE: disable
+    depends_on:
+      - migrate
+    networks:
+      - library_net
+
+
 
 networks:
   library_net:
@@ -36,3 +52,5 @@ networks:
 
 volumes:
   pg_data:
+
+

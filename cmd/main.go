@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/go-chi/chi/v5"
 	"gitlab.com/nevasik7/lg"
 	"libary_music/config"
 	"libary_music/internal/server"
@@ -14,11 +15,16 @@ import (
 // @BasePath /
 func main() {
 	// Загружаем конфигурацию из .env файла.
+
 	cfg := config.MustLoad()
 
+	lg.Init()
+
 	//проверка сервера на работоспослбность
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprint(w, "Music Library API is running!")
+	r := chi.NewRouter()
+	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprint(w, "server libary_music run!")
+
 	})
 
 	// Инициализируем новый сервер с конфигурацией.

@@ -22,19 +22,19 @@ func (uc *SongUC) AddSong(ctx context.Context, song *model.Song) (int, error) {
 }
 
 func (uc *SongUC) GetSongByID(ctx context.Context, id int) (*model.Song, error) {
-	return uc.GetSongByID(ctx, id)
+	return uc.songRepo.GetSongByID(ctx, id)
 }
 
 // Обновление песни
-func (uc *SongUC) UpdateSong(ctx context.Context, song *model.Song) error {
-	return uc.UpdateSong(ctx, song)
+func (uc *SongUC) UpdateSong(ctx context.Context, song *model.Song) (int, error) {
+	return uc.songRepo.UpdateSong(ctx, song)
 }
 
 // Удалене песни
-func (uc *SongUC) DeleteSong(ctx context.Context, id int) error {
-	return uc.DeleteSong(ctx, id)
+func (uc *SongUC) DeleteSong(ctx context.Context, id int) (int, error) {
+	return uc.songRepo.DeleteSong(ctx, id)
 }
 
 func (uc *SongUC) ListSongsWithPagination(ctx context.Context, limit, offset int) ([]model.Song, error) {
-	return uc.ListSongsWithPagination(ctx, limit, offset)
+	return uc.songRepo.ListSongsWithPagination(ctx, limit, offset)
 }

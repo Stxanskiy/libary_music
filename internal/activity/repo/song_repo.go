@@ -3,8 +3,8 @@ package repo
 import (
 	"context"
 	"github.com/jackc/pgx/v5/pgxpool"
-	_interface "libary_music/internal/activity/interface"
 	"libary_music/internal/activity/model"
+	"libary_music/pkg/storage"
 )
 
 // Структура репозитория песен.
@@ -12,11 +12,10 @@ type songRepo struct {
 	pg *pgxpool.Pool
 }
 
-// Фабричная функция для создания нового репозитория песен.
-func NewSongRepo(pg *pgxpool.Pool) _interface.SongRepo {
-	return &songRepo{
-		pg: pg,
-	}
+// NewSongRepo создает новый репозиторий песен.
+func NewSongRepo(db *storage.DB) *songRepo {
+	// Используем db.Pool для получения *pgxpool.Pool из *storage.DB.
+	return &songRepo{pg: db.Pool}
 }
 
 // SQL-запросы.

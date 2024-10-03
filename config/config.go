@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/joho/godotenv"
+	"gitlab.com/nevasik7/lg"
 	"log"
 	"os"
 	"time"
@@ -52,7 +53,7 @@ var I Inj
 func MustLoad() *Config {
 	err := godotenv.Load()
 	if err != nil {
-		log.Panic("Error loading .env file: %v", err)
+		lg.Panicf("Error loading .env file: %v", err)
 	}
 
 	cfg := &Config{

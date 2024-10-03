@@ -3,16 +3,16 @@ package repo
 import (
 	"context"
 	"github.com/jackc/pgx/v5/pgxpool"
-	_interface "libary_music/internal/activity/interface"
 	"libary_music/internal/activity/model"
+	"libary_music/pkg/storage"
 )
 
 type verseRepo struct {
 	pg *pgxpool.Pool
 }
 
-func NewVerseRepo(pg *pgxpool.Pool) _interface.VerseRepo {
-	return &verseRepo{pg: pg}
+func NewVerseRepo(pg *storage.DB) *verseRepo {
+	return &verseRepo{pg: pg.Pool}
 
 }
 

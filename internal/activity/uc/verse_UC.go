@@ -10,10 +10,14 @@ type VerseUC struct {
 	verseRepo _interface.VerseRepo
 }
 
-func NewRepoUC(verseRepo _interface.VerseRepo) *VerseUC {
+func NewVerseUC(verseRepo _interface.VerseRepo) *VerseUC {
 	return &VerseUC{verseRepo: verseRepo}
 }
 
-func (uc *VerseUC) AddVerse(ctx context.Context, verse *model.Verse) (int, error) {
-	return uc.verseRepo.AddVerse(ctx, verse)
+func (uc *VerseUC) AddVerse(ctx context.Context, params *model.Verse) (int, error) {
+	return uc.verseRepo.AddVerse(ctx, params)
+}
+
+func (uc *VerseUC) UpdateVerse(ctx context.Context, params *model.Verse) (int, error) {
+	return uc.verseRepo.UpdateVerse(ctx, params)
 }
