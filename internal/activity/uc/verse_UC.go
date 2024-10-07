@@ -21,3 +21,7 @@ func (uc *VerseUC) AddVerse(ctx context.Context, params *model.Verse) (int, erro
 func (uc *VerseUC) UpdateVerse(ctx context.Context, params *model.Verse) (int, error) {
 	return uc.verseRepo.UpdateVerse(ctx, params)
 }
+
+func (uc *VerseUC) GetSongVerse(ctx context.Context, songID int, limit, offset int) ([]model.Verse, error) {
+	return uc.verseRepo.GetSongVerse(ctx, songID, limit, offset)
+}

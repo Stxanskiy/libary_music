@@ -20,6 +20,10 @@ func NewSongRepo(db *storage.DB) *songRepo {
 
 // SQL-запросы.
 const (
+	getBandIDByNameSQL = `SELECT music_band_id FROM music_band WHERE name = $1;`
+	insertBandSQL      = `INSERT INTO music_band (name) VALUES ($1) RETURNING music_band_id;`
+	insertSongSQL      = `INSERT INTO song (music_band_id, title, release_date, lyrics, link) VALUES ($1, $2, NULL, NULL, NULL) RETURNING song_id;`
+
 	addSongSQL = `
 		INSERT INTO public.song (music_band_id, title, release_date, lyrics, link) 
 		VALUES ($1, $2, $3, $4, $5)

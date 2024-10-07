@@ -1,0 +1,5 @@
+.idea
+
+go.mod
+.env
+docker-compose.yaml

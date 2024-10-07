@@ -5,8 +5,10 @@ import (
 	"libary_music/internal/activity/handler"
 	"libary_music/internal/activity/repo"
 	"libary_music/internal/activity/uc"
+	"libary_music/pkg/api/musiclibary"
 	"libary_music/pkg/storage"
 	"net/http"
+	"os"
 
 	"github.com/go-chi/chi/v5"
 	"gitlab.com/nevasik7/lg"
@@ -26,8 +28,10 @@ func RouterInit(db *storage.DB) *chi.Mux {
 		return nil
 	}
 
-	// Инициализация Use Case.
-	songUC := uc.NewSongUC(songRepo)
+	musicClient := musiclibary.NewMusicLibraryClient(os.Getenv("URL_API_NEW_MUSIC_LIBARY_CLIENT"))
+
+	// Иници3ализация Use Case.
+	songUC := uc.NewSongUC(songRepo, musicClient)
 	verseUC := uc.NewVerseUC(verseRepo)
 
 	// Инициализация хендлеров.
@@ -52,6 +56,7 @@ func RouterInit(db *storage.DB) *chi.Mux {
 	// Определяем маршруты для куплетов.
 	r.Post("/verse", verseHandler.AddVerse)
 	r.Put("/verse/{id}", verseHandler.UpdateVerse)
+	r.Get("/verse/{id}", verseHandler.GetSongVerse)
 
 	// Проверка работоспособности сервера.
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {

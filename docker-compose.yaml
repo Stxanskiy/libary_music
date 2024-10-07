@@ -5,9 +5,9 @@ services:
     image: postgres:16
     container_name: postgres
     environment:
-      POSTGRES_USER: antonio
+      POSTGRES_USER: lib_music
       POSTGRES_PASSWORD: qwerty
-      POSTGRES_DB: postgres
+      POSTGRES_DB: music_db
     ports:
       - "5436:5432"
     volumes:
@@ -15,11 +15,10 @@ services:
     networks:
       - library_net
 
-
   migrate:
     image: migrate/migrate
     container_name: migrate
-    entrypoint: ["sh", "-c", "./wait_for.sh postgres:5432 -- migrate -path /migrations -database postgres://antonio:qwerty@postgres:5432/postgres?sslmode=disable up" ]
+    entrypoint: [ "sh", "-c", "./wait_for.sh postgres:5432 -- migrate -path /migrations -database postgres://lib_music:qwerty@postgres:5432/music_db?sslmode=disable up" ]
     depends_on:
       - postgres
     networks:
@@ -28,29 +27,23 @@ services:
       - ./migrations:/migrations
       - ./wait_for.sh:/wait_for.sh
 
+
   app:
     build:
       context: .
-    environment:
-      DB_HOST: postgres
-      DB_PORT: 5436
-      DB_USER: antonio
-      DB_PASS: qwerty
-      DB_NAME: postgres
-      DB_SSLMODE: disable
+    restart: always
+    container_name: libary_music
     depends_on:
+      - postgres
       - migrate
     networks:
       - library_net
-
-
+    volumes:
+      - .:/app
 
 networks:
   library_net:
     driver: bridge
 
-
 volumes:
   pg_data:
-
-

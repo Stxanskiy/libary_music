@@ -1,6 +1,7 @@
 package musiclibary
 
 import (
+	"fmt"
 	"github.com/go-resty/resty/v2"
 	"gitlab.com/nevasik7/lg"
 )
@@ -31,10 +32,11 @@ func NewMusicLibraryClient(baseURL string) *MusicLibraryClient {
 }
 
 // GetSongDetail - получает информацию о песне из внешнего API по названию группы и песни.
+// GetSongDetail запрашивает информацию о песне через внешний API.
 func (c *MusicLibraryClient) GetSongDetail(group, song string) (*SongDetailResponse, error) {
 	var songDetail SongDetailResponse
 
-	lg.Infof("Отправка запроса к API для получения данных о песне: %s - %s", group, song)
+	lg.Infof("Запрос к API для получения данных о песне: %s - %s", group, song)
 
 	// Выполнение GET-запроса.
 	response, err := c.httpClient.R().
@@ -46,14 +48,12 @@ func (c *MusicLibraryClient) GetSongDetail(group, song string) (*SongDetailRespo
 		Get("/info")
 
 	if err != nil {
-		lg.Errorf("Ошибка при отправке запроса: %v", err)
-		return nil, err
+		return nil, fmt.Errorf("ошибка при отправке запроса: %v", err)
 	}
 
-	// Проверка кода ответа.
+	// Проверка на ошибки в коде ответа.
 	if response.IsError() {
-		lg.Errorf("Получен некорректный статус код: %d, сообщение: %s", response.StatusCode(), response.String())
-		return nil, err
+		return nil, fmt.Errorf("получен некорректный статус код: %d", response.StatusCode())
 	}
 
 	lg.Infof("Получен ответ от API: %v", songDetail)
