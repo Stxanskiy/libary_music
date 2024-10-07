@@ -1,5 +1,7 @@
 .idea
 
 go.mod
+go.sum
+wait_for.sh
 .env
 docker-compose.yaml

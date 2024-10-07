@@ -6,14 +6,16 @@ import (
 	"libary_music/internal/server"
 )
 
-// @title Music Library API
-// @version 1.0.0
-// @description API для управления музыкальной библиотекой.
-// @BasePath /
-func main() {
-	cfg := config.MustLoad()
+// @title Онлайн Библиотека Песен
+// @version 1.0
+// @description Это API для управления музыкальной библиотекой.
 
+// @BasePath /
+// @schemes http
+
+func main() {
 	lg.Init()
+	cfg := config.MustLoad()
 
 	srv, err := server.New(cfg)
 	if err != nil {

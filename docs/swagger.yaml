@@ -1,0 +1,289 @@
+basePath: /
+definitions:
+  model.ErrorResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  model.Song:
+    properties:
+      group_name:
+        type: string
+      link:
+        type: string
+      lyrics:
+        type: string
+      music_band_id:
+        type: integer
+      release_date:
+        type: string
+      song_id:
+        type: integer
+      title:
+        type: string
+    type: object
+  model.SongResponse:
+    properties:
+      group_name:
+        type: string
+      id:
+        type: integer
+      title:
+        type: string
+    type: object
+  model.SongS:
+    properties:
+      group_name:
+        type: string
+      id:
+        type: integer
+      title:
+        type: string
+    type: object
+  model.Verse:
+    properties:
+      content:
+        description: Текст куплета
+        type: string
+      position:
+        type: integer
+      song_id:
+        type: integer
+      verse_id:
+        type: integer
+    type: object
+info:
+  contact: {}
+  description: Это API для управления музыкальной библиотекой.
+  title: Онлайн Библиотека Песен
+  version: "1.0"
+paths:
+  /song:
+    get:
+      consumes:
+      - application/json
+      description: Возвращает список песен с пагинацией
+      parameters:
+      - description: Количество песен на странице
+        in: query
+        name: limit
+        type: integer
+      - description: Смещение
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.SongResponse'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Получение списка песен
+      tags:
+      - Song
+    post:
+      consumes:
+      - application/json
+      description: Добавляет новую песню в музыкальную библиотеку
+      parameters:
+      - description: Данные песни
+        in: body
+        name: verse
+        required: true
+        schema:
+          $ref: '#/definitions/model.SongS'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/model.SongResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Добавляение песни
+      tags:
+      - Song
+  /song/{id}:
+    put:
+      consumes:
+      - application/json
+      description: Обновляет песню из музыкальной библиотеки по его {id}
+      parameters:
+      - description: ID Песни
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Данные Песни
+        in: body
+        name: verse
+        required: true
+        schema:
+          $ref: '#/definitions/model.Song'
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            $ref: '#/definitions/model.SongResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Обновляет песню по ID
+      tags:
+      - Song
+  /song/{song_id}:
+    get:
+      consumes:
+      - application/json
+      description: Получает песню по ее {id}
+      parameters:
+      - description: ID песни
+        in: path
+        name: song_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Song'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Получение песни
+      tags:
+      - Song
+  /song/{song_id}/verses:
+    get:
+      consumes:
+      - application/json
+      description: Получает куплеты по ID песни
+      parameters:
+      - description: ID песни
+        in: path
+        name: song_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Verse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Получение куплетов по ID песни
+      tags:
+      - Verses
+  /verse:
+    delete:
+      consumes:
+      - application/json
+      description: Удаление песни из музыкальной библиотеки по ее {id}
+      parameters:
+      - description: Данные куплета
+        in: body
+        name: verse
+        required: true
+        schema:
+          $ref: '#/definitions/model.Song'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/model.SongResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Удаляет песню по ее {id}
+      tags:
+      - Song
+    post:
+      consumes:
+      - application/json
+      description: Добавляет новый куплет в песню
+      parameters:
+      - description: Данные куплета
+        in: body
+        name: verse
+        required: true
+        schema:
+          $ref: '#/definitions/model.Verse'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/model.Verse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Добавляет новый куплет в песню
+      tags:
+      - Verses
+  /verse/{id}:
+    put:
+      consumes:
+      - application/json
+      description: Обновляет куплет по его ID
+      parameters:
+      - description: ID куплета
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Данные куплета
+        in: body
+        name: verse
+        required: true
+        schema:
+          $ref: '#/definitions/model.Verse'
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            $ref: '#/definitions/model.Verse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Обновляет куплет по ID
+      tags:
+      - Verses
+schemes:
+- http
+swagger: "2.0"

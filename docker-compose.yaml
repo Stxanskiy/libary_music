@@ -1,32 +1,6 @@
 version: "3.9"
 
 services:
-  postgres:
-    image: postgres:16
-    container_name: postgres
-    environment:
-      POSTGRES_USER: lib_music
-      POSTGRES_PASSWORD: qwerty
-      POSTGRES_DB: music_db
-    ports:
-      - "5436:5432"
-    volumes:
-      - pg_data:/var/lib/postgresql/data
-    networks:
-      - library_net
-
-  migrate:
-    image: migrate/migrate
-    container_name: migrate
-    entrypoint: [ "sh", "-c", "./wait_for.sh postgres:5432 -- migrate -path /migrations -database postgres://lib_music:qwerty@postgres:5432/music_db?sslmode=disable up" ]
-    depends_on:
-      - postgres
-    networks:
-      - library_net
-    volumes:
-      - ./migrations:/migrations
-      - ./wait_for.sh:/wait_for.sh
-
 
   app:
     build:
@@ -40,6 +14,36 @@ services:
       - library_net
     volumes:
       - .:/app
+
+
+  postgres:
+    image: postgres:16
+    container_name: postgres
+    environment:
+      POSTGRES_USER: lib_music
+      POSTGRES_PASSWORD: qwerty
+      POSTGRES_DB: postgres
+    ports:
+      - "5436:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    networks:
+      - library_net
+
+  migrate:
+    image: migrate/migrate
+    container_name: migrate
+    entrypoint: [ "sh", "-c", "./wait_for.sh postgres:5432 -- migrate -path /migrations -database postgres://lib_music:qwerty@postgres:5432/postgres?sslmode=disable up" ]
+    depends_on:
+      - postgres
+    networks:
+      - library_net
+    volumes:
+      - ./migrations:/migrations
+      - ./wait_for.sh:/wait_for.sh
+
+
+
 
 networks:
   library_net:

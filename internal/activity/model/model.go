@@ -31,3 +31,21 @@ type Verse struct {
 	Content  string `json:"content"` // Текст куплета
 	Position int    `json:"position"`
 }
+
+type SongS struct {
+	ID        int    `json:"id"`
+	GroupName string `json:"group_name"`
+	Title     string `json:"title"`
+}
+
+// SongResponse используется для возврата данных песни в API.
+type SongResponse struct {
+	ID        int    `json:"id"`
+	GroupName string `json:"group_name"`
+	Title     string `json:"title"`
+}
+
+// ErrorResponse используется для возврата ошибок в API.
+type ErrorResponse struct {
+	Message string `json:"message"`
+}

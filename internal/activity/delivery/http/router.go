@@ -2,6 +2,8 @@ package http
 
 import (
 	"fmt"
+	httpSwagger "github.com/swaggo/http-swagger"
+	"libary_music/docs"
 	"libary_music/internal/activity/handler"
 	"libary_music/internal/activity/repo"
 	"libary_music/internal/activity/uc"
@@ -42,6 +44,9 @@ func RouterInit(db *storage.DB) *chi.Mux {
 		return nil
 	}
 
+	//swagger
+	docs.SwaggerInfo.BasePath = "http://localhost:8080/swagger/doc.json"
+
 	lg.Trace("Обработчики успешно инициализированы")
 
 	// Определяем маршруты для песен.
@@ -62,6 +67,8 @@ func RouterInit(db *storage.DB) *chi.Mux {
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("Music Library API is running!"))
 	})
+
+	r.Get("/swagger/*", httpSwagger.WrapHandler)
 
 	return r
 }

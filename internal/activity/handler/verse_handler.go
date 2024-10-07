@@ -17,16 +17,16 @@ func NewVerseHandler(uc uc.VerseUC) *VerseHandler {
 	return &VerseHandler{UC: uc}
 }
 
+// AddVerse добавляет новый куплет в песню.
 // @Summary Добавляет новый куплет в песню
-// @Description AddVerse обрабатывает POST-запрос для добавления нового куплета.
-// @Tags Куплеты
+// @Description Добавляет новый куплет в песню
+// @Tags Verses
 // @Accept json
 // @Produce json
-// @Param verse body Verse true  "Даные куалета"
-// @Success 201 {object} VerseResponse
-// @Failure 400 {object} ErrorResponse
+// @Param verse body model.Verse true "Данные куплета"
+// @Success 201 {object} model.Verse
+// @Failure 400 {object} model.ErrorResponse
 // @Router /verse [post]
-
 func (h *VerseHandler) AddVerse(w http.ResponseWriter, r *http.Request) {
 	var verse model.Verse
 	if err := json.NewDecoder(r.Body).Decode(&verse); err != nil {
@@ -42,16 +42,18 @@ func (h *VerseHandler) AddVerse(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 }
 
-// @Summary Обновляет данные песни
-// @Description UpdateVerse позволяет обновить куплет по ее {id}
-// @Tags Куплеты
+// UpdateVerse обновляет куплет по его ID.
+// @Summary Обновляет куплет по ID
+// @Description Обновляет куплет по его ID
+// @Tags Verses
 // @Accept json
 // @Produce json
-// @Param verse body Verse true  "Даные куалета"
-// @Success 201 {object} VerseResponse
-// @Failure 400 {object} ErrorResponse
-// @Router /verse/{id} [PUT]
-
+// @Param id path int true "ID куплета"
+// @Param verse body model.Verse true "Данные куплета"
+// @Success 204 {object} model.Verse
+// @Failure 400 {object} model.ErrorResponse
+// @Failure 404 {object} model.ErrorResponse
+// @Router /verse/{id} [put]
 func (h *VerseHandler) UpdateVerse(w http.ResponseWriter, r *http.Request) {
 	var verse model.Verse
 	if err := json.NewDecoder(r.Body).Decode(&verse); err != nil {
@@ -67,16 +69,16 @@ func (h *VerseHandler) UpdateVerse(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusNoContent)
 }
 
-// @Summary Получение куплетов песни с пагинацией
-// @Description GetSongVerse позволяет получить куплеты песни по {id} пенси
-// @Tags Куплеты
+// GetSongVerse получает куплеты по ID песни.
+// @Summary Получение куплетов по ID песни
+// @Description Получает куплеты по ID песни
+// @Tags Verses
 // @Accept json
 // @Produce json
-// @Param verse {id}
-// @Success 201 {object} VerseResponse
-// @Failure 400 {object} ErrorResponse
-// @Router /verse/{id} [GET]
-
+// @Param song_id path int true "ID песни"
+// @Success 200 {object} model.Verse
+// @Failure 404 {object} model.ErrorResponse
+// @Router /song/{song_id}/verses [get]
 func (h *VerseHandler) GetSongVerse(w http.ResponseWriter, r *http.Request) {
 	url := r.URL.Path
 	songIDStr := strings.Split(url, "/")

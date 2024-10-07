@@ -1,16 +1,12 @@
-FROM golang:1.23.1-alpine AS builder
+FROM golang:latest as gobuild
+
 WORKDIR /app
-COPY go.mod ./
-COPY go.sum ./
 
-
-RUN go mod download
+RUN apt-get -y install tzdata
+ENV TZ=Europe/Moscow
 
 COPY . .
-
+RUN go mod download
 RUN go build -o main ./cmd
 
-
-
-CMD ["/main"]
-RUN go run cmd/main.go
+CMD [ "./main"]

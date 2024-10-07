@@ -1,9 +1,9 @@
 package httpModel
 
-type BaseResponse struct {
-	Error   *ErrorResponse `json:"error,omitempty"`
-	Success bool           `json:"success"`
-	Data    any            `json:"data,omitempty"`
+type SongResponse struct {
+	ID        int    `json:"id"`
+	GroupName string `json:"groupName"`
+	Title     string `json:"title"`
 }
 
 type ErrorResponse struct {

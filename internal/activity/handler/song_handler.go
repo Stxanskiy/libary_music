@@ -22,14 +22,15 @@ func NewSongHandler(uc uc.SongUC) *SongHandler {
 	return &SongHandler{UC: uc}
 }
 
-// @Summary Добавление песни
-// @Description Добавляет песню в бд и возвращает ее ID
-// @Tags Песни
+// AddSong добавляет новый куплет в песню.
+// @Summary Добавляение песни
+// @Description Добавляет новую песню в музыкальную библиотеку
+// @Tags Song
 // @Accept json
 // @Produce json
-// @Param song body Song true  "Данные песни"
-// @Success 201 {object} SongResponse
-// @Failure 400 {object} ErrorRespnse
+// @Param verse body model.SongS true "Данные песни"
+// @Success 201 {object} model.SongResponse
+// @Failure 400 {object} model.ErrorResponse
 // @Router /song [post]
 func (h *SongHandler) AddSong(w http.ResponseWriter, r *http.Request) {
 	var request struct {
@@ -99,16 +100,16 @@ func (h *SongHandler) AddSong(w http.ResponseWriter, r *http.Request) {
 	})
 }*/
 
+// GetSongByID Получение песни по {id}
 // @Summary Получение песни
-// @Description GetSongByID получает песню по ID.
-// @Tags Песни
+// @Description Получает песню по ее {id}
+// @Tags Song
 // @Accept json
 // @Produce json
-// @Param song id "ID- Песни"
-// @Success 201 {id} SongResponse
-// @Failure 400 {id} ErrorResponse
-// @Router /song/{id} [GET]
-
+// @Param song_id path int true "ID песни"
+// @Success 200 {object} model.Song
+// @Failure 500 {object} model.ErrorResponse
+// @Router /song/{song_id} [get]
 func (h *SongHandler) GetSongByID(w http.ResponseWriter, r *http.Request) {
 	idStr := chi.URLParam(r, "id")
 	id, err := strconv.Atoi(idStr)
@@ -127,16 +128,16 @@ func (h *SongHandler) GetSongByID(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(song)
 }
 
-// @Summary Удаление песни
-// @Description DeleteSong удаляет песню по ID.
-// @Tags Песни
+// DeleteSong Удаляет песню по ее {id}
+// @Summary Удаляет песню по ее {id}
+// @Description Удаление песни из музыкальной библиотеки по ее {id}
+// @Tags Song
 // @Accept json
 // @Produce json
-// @Param song id "Удаление песни"
-// @Success 201 {id} SongResponse
-// @Failure 400 {id} ErrorResponse
-// @Router /song/{id} [delete]
-
+// @Param verse body model.Song true "Данные куплета"
+// @Success 201 {object} model.SongResponse
+// @Failure 400 {object} model.ErrorResponse
+// @Router /verse [delete]
 func (h *SongHandler) DeleteSong(w http.ResponseWriter, r *http.Request) {
 	idStr := chi.URLParam(r, "id")
 	id, err := strconv.Atoi(idStr)
@@ -153,16 +154,18 @@ func (h *SongHandler) DeleteSong(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusNoContent)
 }
 
-// @Summary Обновление песни
-// @Description UpdateSong обновляет данные песни по ее id.
-// @Tags Песни
+// UpdateSong обновляет песню по его ID.
+// @Summary Обновляет песню по ID
+// @Description Обновляет песню из музыкальной библиотеки по его {id}
+// @Tags Song
 // @Accept json
 // @Produce json
-// @Param song body Song true "Данные песни"
-// @Success 201 {object} SongResponse
-// @Failure 401 {object} ErrorResponse
-// @Router /song/{id} [PUT]
-
+// @Param id path int true "ID Песни"
+// @Param verse body model.Song true "Данные Песни"
+// @Success 204 {object} model.SongResponse
+// @Failure 400 {object} model.ErrorResponse
+// @Failure 404 {object} model.ErrorResponse
+// @Router /song/{id} [put]
 func (h *SongHandler) UpdateSong(w http.ResponseWriter, r *http.Request) {
 	var song model.Song
 	if err := json.NewDecoder(r.Body).Decode(&song); err != nil {
@@ -179,16 +182,17 @@ func (h *SongHandler) UpdateSong(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, "Song updated successfully")
 }
 
-// @Summary Получение песен
-// @Description ListSongsWithPagination возвращает список песен с поддержкой пагинации и Фильтрации.
-// @Tags Песни
+// ListSongsWithPagination возвращает список песен с поддержкой пагинации.
+// @Summary Получение списка песен
+// @Description Возвращает список песен с пагинацией
+// @Tags Song
 // @Accept json
 // @Produce json
-// @Param "Данные песен"
-// @Success 201 {objects} SongResponse
-// @Failure 400 {objects} ErrorResponse
-// @Router /song [GET]
-
+// @Param limit query int false "Количество песен на странице"-(limit)
+// @Param offset query int false "Смещение"-(offset)
+// @Success 200 {array} model.SongResponse
+// @Failure 400 {object} model.ErrorResponse
+// @Router /song [get]
 func (h *SongHandler) ListSongsWithPagination(w http.ResponseWriter, r *http.Request) {
 	limitStr := r.URL.Query().Get("limit")
 	offsetStr := r.URL.Query().Get("offset")
